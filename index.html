@@ -18,8 +18,8 @@
 
   body {
     font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
     color: #fff;
     background: radial-gradient(ellipse at top, var(--g-blue-2) 0%, var(--g-blue) 55%, #050f2a 100%);
   }
@@ -129,7 +129,7 @@
 
   .bootcamp {
     display: inline-block; margin-top: 6px;
-    font-size: clamp(1.2rem, 3.5vw, 2.4rem); font-weight: 800; letter-spacing: 6px;
+    font-size: clamp(1rem, 2.6vw, 1.8rem); font-weight: 800; letter-spacing: 4px;
     padding: 8px 26px; border: 2px solid var(--vn-gold); border-radius: 50px;
     color: var(--vn-gold); opacity: 0; transform: scale(.6);
     animation: pop .7s 2.5s cubic-bezier(.34,1.56,.64,1) forwards, glow 2s 3.2s ease-in-out infinite;
@@ -148,7 +148,7 @@
   @keyframes blink { 50% { opacity: 0; } }
 
   .partner {
-    margin-top: 22px; font-size: .95rem; letter-spacing: 2px; color: var(--g-silver);
+    margin-top: 22px; font-size: .95rem; letter-spacing: 2px; color: var(--g-silver); line-height: 1.9;
     opacity: 0; animation: fadeUp 1s 3.2s forwards;
   }
   .partner strong {
@@ -162,6 +162,9 @@
     margin-top: 30px; font-size: .8rem; letter-spacing: 3px; text-transform: uppercase;
     color: rgba(217,222,231,.6); opacity: 0; animation: fadeUp 1s 3.8s forwards;
   }
+  .scroll-cue { margin-top: 14px; width: 34px; opacity: 0; animation: fadeUp 1s 4.2s forwards; }
+  .scroll-cue svg { display: block; width: 100%; transform: rotate(90deg); animation: bob 1.8s ease-in-out infinite; filter: drop-shadow(0 0 6px #9fd4ff); }
+  @keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 0 8px; } }
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
   @keyframes fadeUp   { from { opacity: 0; transform: translateY(20px); }  to { opacity: 1; transform: none; } }
@@ -170,8 +173,117 @@
   .landscape { position: fixed; left: 0; bottom: 0; width: 100%; z-index: 2; pointer-events: none; }
   .landscape svg { display: block; width: 100%; height: auto; }
 
+  /* ---------- Event detail sections ---------- */
+  .section { position: relative; z-index: 5; max-width: 1000px; margin: 0 auto; padding: 60px 6vw; }
+  .eyebrow {
+    text-align: center; font-size: .8rem; font-weight: 700; letter-spacing: 6px;
+    text-transform: uppercase; color: var(--vn-gold); margin-bottom: 8px;
+  }
+  .section-title {
+    text-align: center; margin-bottom: 30px;
+    font-size: clamp(1.6rem, 4vw, 2.6rem); font-weight: 900;
+    background: var(--g-chrome); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: chrome 5s linear infinite;
+  }
+
+  .panel {
+    position: relative; overflow: hidden;
+    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
+    border: 1px solid rgba(217,222,231,.22); border-radius: 18px; padding: 26px 24px;
+  }
+  .panel p { color: var(--g-silver); line-height: 1.7; font-size: 1.05rem; }
+  .panel strong { color: #fff; }
+
+  /* Scroll reveal + blade shine sweeping across each panel */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s, transform .8s, border-color .3s; }
+  .reveal.show { opacity: 1; transform: none; }
+  .panel.reveal:hover { border-color: rgba(159,212,255,.7); transform: translateY(-4px); }
+  .panel::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), rgba(159,212,255,.3), transparent);
+    transform: skewX(-20deg);
+  }
+  .show.panel::after, .show .panel::after { animation: panelSweep 1.1s .2s ease-out forwards; }
+  .panel:hover::after { animation: panelSweep .8s ease-out; }
+  @keyframes panelSweep { from { left: -60%; } to { left: 130%; } }
+
+  /* What you'll learn */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px; }
+  .learn .num { font-size: .8rem; font-weight: 800; letter-spacing: 3px; color: var(--vn-gold); }
+  .learn svg { display: block; width: 56px; margin-bottom: 14px; transition: transform .6s; filter: drop-shadow(0 0 6px rgba(159,212,255,.5)); }
+  .learn:hover svg { transform: rotate(180deg); }
+  .learn h3 { font-size: 1.05rem; line-height: 1.45; margin-top: 6px; }
+
+  /* Agenda timeline: a steel edge that cuts down as you scroll */
+  .timeline { position: relative; padding-left: 34px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 10px; top: 0; bottom: 0; width: 3px;
+    background: rgba(217,222,231,.15); border-radius: 2px;
+  }
+  .edge {
+    position: absolute; left: 10px; top: 0; width: 3px; height: 0; border-radius: 2px;
+    background: linear-gradient(#ffffff, #9fd4ff); box-shadow: 0 0 12px #9fd4ff;
+  }
+  .edge-blade {
+    position: absolute; left: 50%; bottom: -14px; width: 30px;
+    transform: translateX(-50%) rotate(90deg); filter: drop-shadow(0 0 6px #9fd4ff);
+  }
+  .slot { position: relative; margin-bottom: 12px; }
+  .slot::before {
+    content: ""; position: absolute; left: -30px; top: 50%; width: 11px; height: 11px;
+    transform: translateY(-50%) rotate(45deg);
+    background: var(--g-blue); border: 2px solid var(--g-silver); transition: all .4s;
+  }
+  .slot.show::before { background: var(--vn-gold); border-color: #fff; box-shadow: 0 0 10px var(--vn-gold); }
+  .slot .panel {
+    display: grid; grid-template-columns: 100px 1fr auto; align-items: center; gap: 16px;
+    padding: 16px 22px; transition: border-color .3s, transform .3s;
+  }
+  .slot .panel:hover { border-color: rgba(159,212,255,.7); transform: translateX(6px); }
+  .slot time { font-weight: 800; color: var(--vn-gold); letter-spacing: 1px; }
+  .slot .what { font-weight: 600; }
+  .slot .dur {
+    font-size: .8rem; letter-spacing: 1px; color: var(--g-silver);
+    border: 1px solid rgba(217,222,231,.35); border-radius: 20px; padding: 3px 12px; white-space: nowrap;
+  }
+  .slot.break .panel { background: rgba(255,255,255,.03); border-style: dashed; }
+  .slot.hl .panel { border-color: var(--vn-gold); box-shadow: 0 0 22px rgba(255,205,0,.25); }
+  @media (max-width: 560px) {
+    .slot .panel { grid-template-columns: 1fr auto; }
+    .slot .what { grid-column: 1 / -1; grid-row: 2; }
+  }
+
+  /* Checklist: ticking an item slices through it */
+  .check {
+    position: relative; display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid rgba(217,222,231,.12);
+  }
+  .check.sub { padding-left: 26px; }
+  .check input { position: absolute; opacity: 0; }
+  .box {
+    position: relative; flex: 0 0 22px; height: 22px; margin-top: 2px;
+    border: 2px solid var(--g-silver); border-radius: 5px; transition: all .3s;
+  }
+  .check input:checked + .box { background: var(--vn-gold); border-color: var(--vn-gold); }
+  .check input:checked + .box::after {
+    content: ""; position: absolute; left: 6px; top: 1px; width: 6px; height: 12px;
+    border: solid var(--g-blue); border-width: 0 3px 3px 0; transform: rotate(45deg);
+  }
+  .check input:focus-visible + .box { outline: 2px solid #9fd4ff; outline-offset: 3px; }
+  .txt { position: relative; color: var(--g-silver); line-height: 1.5; transition: color .4s; }
+  .txt::after {
+    content: ""; position: absolute; left: 0; top: 50%; width: 0; height: 2px;
+    background: linear-gradient(90deg, #ffffff, #9fd4ff); box-shadow: 0 0 8px #9fd4ff;
+    transition: width .45s ease-out;
+  }
+  .check input:checked ~ .txt { color: rgba(217,222,231,.5); }
+  .check input:checked ~ .txt::after { width: 100%; }
+  .sub-head { margin-top: 18px; font-weight: 700; color: #fff !important; }
+  .check-hint { margin-top: 16px; font-size: .8rem !important; letter-spacing: 2px; text-transform: uppercase; color: rgba(217,222,231,.55) !important; }
+
   footer {
-    position: fixed; left: 0; right: 0; bottom: 14px; z-index: 5; text-align: center;
+    position: relative; z-index: 5; text-align: center; padding: 20px 6vw calc(10vw + 20px);
     color: var(--g-silver); font-size: .85rem; letter-spacing: 1px;
   }
 
@@ -239,10 +351,59 @@
         <h1 class="title">Ben Cat <span class="accent">Digital</span> Academy</h1>
         <div class="blade" aria-hidden="true"></div>
       </div>
-      <div class="bootcamp">BOOTCAMP</div>
+      <div class="bootcamp">COPILOT STUDIO BOOTCAMP</div>
       <p class="tagline"><span id="typed"></span><span class="cursor">&nbsp;</span></p>
-      <p class="partner">Powered by <strong>Gillette</strong> &middot; Ben Cat, Bình Dương, Việt Nam</p>
-      <p class="hint">Move &amp; click anywhere to slice</p>
+      <p class="partner">Grooming Digital Academy FY26/27 &middot; Powered by <strong>Gillette</strong><br>Full-day &middot; In-person &middot; Ben Cat, Bình Dương, Việt Nam</p>
+      <p class="hint">Move &amp; click to slice &middot; Scroll for details</p>
+      <div class="scroll-cue" aria-hidden="true"><svg viewBox="0 0 100 44"><use href="#de-blade"/></svg></div>
+    </section>
+
+    <section class="section">
+      <div class="eyebrow">The Platform</div>
+      <h2 class="section-title">What is Copilot Studio?</h2>
+      <div class="panel reveal">
+        <p><strong>Copilot Studio</strong> is Microsoft's low-code platform for building custom AI assistants that can answer questions, automate tasks, and connect to business data and systems.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="eyebrow">Sharpen Your Skills</div>
+      <h2 class="section-title">What You Will Learn</h2>
+      <div class="grid">
+        <div class="panel learn reveal"><svg viewBox="0 0 100 44"><use href="#de-blade"/></svg><div class="num">01</div><h3>Fundamentals of Copilot Studio</h3></div>
+        <div class="panel learn reveal"><svg viewBox="0 0 100 44"><use href="#de-blade"/></svg><div class="num">02</div><h3>How to design effective prompts and conversation flows</h3></div>
+        <div class="panel learn reveal"><svg viewBox="0 0 100 44"><use href="#de-blade"/></svg><div class="num">03</div><h3>How to connect copilots to business data and automate actions</h3></div>
+        <div class="panel learn reveal"><svg viewBox="0 0 100 44"><use href="#de-blade"/></svg><div class="num">04</div><h3>Hands-on exercises to build your own AI copilot solution</h3></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="eyebrow">Full-Day Program</div>
+      <h2 class="section-title">Agenda</h2>
+      <div class="timeline" id="timeline">
+        <span class="edge" id="edge"><svg class="edge-blade" viewBox="0 0 100 44"><use href="#de-blade"/></svg></span>
+        <div class="slot reveal"><div class="panel"><time>8:00 AM</time><span class="what">Stefan's Opening</span><span class="dur">5 min</span></div></div>
+        <div class="slot reveal"><div class="panel"><time>8:05 AM</time><span class="what">Grooming Digital Academy Intro</span><span class="dur">10 min</span></div></div>
+        <div class="slot reveal"><div class="panel"><time>8:15 AM</time><span class="what">Copilot Studio Knowledge Base</span><span class="dur">10 min</span></div></div>
+        <div class="slot reveal"><div class="panel"><time>9:00 AM</time><span class="what">Flow Demo</span><span class="dur">45 min</span></div></div>
+        <div class="slot reveal"><div class="panel"><time>10:00 AM</time><span class="what">Use Case Work Session</span><span class="dur">120 min</span></div></div>
+        <div class="slot reveal break"><div class="panel"><time>12:00 PM</time><span class="what">Lunch</span><span class="dur">60 min</span></div></div>
+        <div class="slot reveal"><div class="panel"><time>1:00 PM</time><span class="what">Use Case Work Session</span><span class="dur">60 min</span></div></div>
+        <div class="slot reveal hl"><div class="panel"><time>2:30 PM</time><span class="what">Hackathon</span><span class="dur">90 min</span></div></div>
+        <div class="slot reveal"><div class="panel"><time>3:45 PM</time><span class="what">End</span><span></span></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="eyebrow">Be Prepared</div>
+      <h2 class="section-title">Checklist</h2>
+      <div class="panel reveal">
+        <label class="check"><input type="checkbox"><span class="box"></span><span class="txt">Align with your manager to join <strong>full-day, in-person</strong>.</span></label>
+        <p class="sub-head">Use case prework &mdash; if you have a use case:</p>
+        <label class="check sub"><input type="checkbox"><span class="box"></span><span class="txt">Specify soft savings ($/year, minutes/day, etc.)</span></label>
+        <label class="check sub"><input type="checkbox"><span class="box"></span><span class="txt">Prepare data sources (preferably from Office 365 apps)</span></label>
+        <p class="check-hint">Tick each item to slice it off your list</p>
+      </div>
     </section>
   </main>
 
@@ -296,7 +457,8 @@
   // Typewriter tagline
   const phrases = [
     'Sharpen your skills. Shape the future.',
-    'Digital excellence, made in Vietnam.',
+    'Build your own AI copilot.',
+    'Low-code. Razor-sharp impact.',
     'The best a learner can get.',
     'Học hỏi - Sáng tạo - Phát triển.'
   ];
@@ -409,6 +571,28 @@
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  // Reveal panels on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('show');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Agenda steel edge grows as you scroll through the timeline
+  const timeline = document.getElementById('timeline');
+  const edge = document.getElementById('edge');
+  function updateEdge() {
+    const r = timeline.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / r.height));
+    edge.style.height = (p * 100) + '%';
+  }
+  addEventListener('scroll', updateEdge, { passive: true });
+  updateEdge();
 
   document.getElementById('year').textContent = new Date().getFullYear();
 </script>
