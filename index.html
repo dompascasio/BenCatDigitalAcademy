@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ben Cat Digital Academy Bootcamp</title>
+<style>
+  :root {
+    --vn-red: #da251d;
+    --vn-gold: #ffcd00;
+    --g-blue: #0a2a6b;
+    --g-blue-2: #1a4fb5;
+    --g-silver: #d9dee7;
+    --g-chrome: linear-gradient(90deg, #8e9aaf, #f5f7fa, #b8c2d3, #ffffff, #8e9aaf);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    color: #fff;
+    background: radial-gradient(ellipse at top, var(--g-blue-2) 0%, var(--g-blue) 55%, #050f2a 100%);
+  }
+
+  /* ---------- Sky: stars ---------- */
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .stars span {
+    position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle { 0%,100% { opacity: .2; } 50% { opacity: 1; } }
+
+  /* ---------- Floating double-edge razor blades ---------- */
+  #blades { position: fixed; inset: -40px; z-index: 1; pointer-events: none; overflow: hidden; }
+  .fblade {
+    position: absolute; bottom: -100px; opacity: 0;
+    filter: drop-shadow(0 0 8px rgba(159, 212, 255, .55));
+    animation: drift linear infinite;
+  }
+  .fblade svg { display: block; width: 100%; height: auto; animation: spin linear infinite; }
+  @keyframes drift {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    10%  { opacity: .85; }
+    90%  { opacity: .85; }
+    100% { transform: translate(40px, -125vh); opacity: 0; }
+  }
+  @keyframes spin {
+    from { transform: rotateZ(0) rotateY(0); }
+    to   { transform: rotateZ(360deg) rotateY(360deg); }
+  }
+
+  /* ---------- Razor cursor + cut effects ---------- */
+  #fx { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+  .razor-cursor {
+    position: fixed; top: 0; left: 0; z-index: 7; pointer-events: none; opacity: 0;
+    transform-origin: 18px 5px; transition: opacity .3s;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+  }
+  .razor-cursor svg { display: block; }
+  .razor-cursor.cut svg { animation: chop .25s ease-out; }
+  @keyframes chop { 50% { transform: translateY(8px) scale(.92); } }
+  @media (pointer: fine) { body { cursor: none; } }
+
+  /* ---------- Header ---------- */
+  header {
+    position: relative; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 6vw;
+  }
+  .brand {
+    font-weight: 800; letter-spacing: 3px; font-size: 1.1rem;
+    background: var(--g-chrome); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: chrome 4s linear infinite;
+  }
+  .flag {
+    width: 54px; height: 36px; background: var(--vn-red); position: relative;
+    border-radius: 3px; box-shadow: 0 2px 10px rgba(0,0,0,.4);
+  }
+  .flag svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; z-index: 5;
+    min-height: calc(100vh - 80px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0 6vw 160px;
+  }
+
+  .welcome {
+    font-size: clamp(1rem, 2.2vw, 1.5rem); letter-spacing: 8px; text-transform: uppercase;
+    color: var(--vn-gold); opacity: 0;
+    animation: fadeDown 1s .3s forwards;
+  }
+
+  .title-wrap { position: relative; margin: 18px 0; overflow: hidden; padding: 10px 20px; }
+  .title {
+    font-size: clamp(2.2rem, 7vw, 5.5rem); font-weight: 900; line-height: 1.05;
+    background: var(--g-chrome); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    clip-path: inset(0 100% 0 0);
+    animation: reveal 1.4s 1s cubic-bezier(.77,0,.18,1) forwards, chrome 5s 2.4s linear infinite;
+    filter: drop-shadow(0 4px 18px rgba(26, 79, 181, .8));
+  }
+  .title .accent {
+    background: linear-gradient(90deg, var(--vn-red), var(--vn-gold), var(--vn-red));
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: chrome 3s linear infinite;
+  }
+
+  /* Razor blade sweeping across the title */
+  .blade {
+    position: absolute; top: 0; left: -120px; width: 90px; height: 100%;
+    animation: sweep 1.4s 1s cubic-bezier(.77,0,.18,1) forwards;
+    pointer-events: none;
+  }
+  .blade::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.95) 45%, #9fd4ff 55%, transparent);
+    transform: skewX(-20deg);
+    box-shadow: 0 0 40px 10px rgba(159, 212, 255, .6);
+  }
+  @keyframes sweep { 0% { left: -120px; opacity: 1; } 95% { opacity: 1; } 100% { left: 110%; opacity: 0; } }
+  @keyframes reveal { to { clip-path: inset(0 0 0 0); } }
+  @keyframes chrome { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+
+  .bootcamp {
+    display: inline-block; margin-top: 6px;
+    font-size: clamp(1.2rem, 3.5vw, 2.4rem); font-weight: 800; letter-spacing: 6px;
+    padding: 8px 26px; border: 2px solid var(--vn-gold); border-radius: 50px;
+    color: var(--vn-gold); opacity: 0; transform: scale(.6);
+    animation: pop .7s 2.5s cubic-bezier(.34,1.56,.64,1) forwards, glow 2s 3.2s ease-in-out infinite;
+  }
+  @keyframes pop { to { opacity: 1; transform: scale(1); } }
+  @keyframes glow {
+    0%,100% { box-shadow: 0 0 10px rgba(255,205,0,.3); }
+    50%     { box-shadow: 0 0 30px rgba(255,205,0,.8); }
+  }
+
+  .tagline {
+    margin-top: 28px; min-height: 1.6em;
+    font-size: clamp(1rem, 2vw, 1.35rem); color: var(--g-silver);
+  }
+  .tagline .cursor { display: inline-block; width: 2px; background: var(--vn-gold); animation: blink .8s infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .partner {
+    margin-top: 22px; font-size: .95rem; letter-spacing: 2px; color: var(--g-silver);
+    opacity: 0; animation: fadeUp 1s 3.2s forwards;
+  }
+  .partner strong {
+    font-style: italic; font-size: 1.4rem; letter-spacing: 1px;
+    background: var(--g-chrome); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: chrome 4s linear infinite;
+  }
+
+  .hint {
+    margin-top: 30px; font-size: .8rem; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(217,222,231,.6); opacity: 0; animation: fadeUp 1s 3.8s forwards;
+  }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(20px); }  to { opacity: 1; transform: none; } }
+
+  /* ---------- Static Vietnam backdrop (Ha Long Bay) ---------- */
+  .landscape { position: fixed; left: 0; bottom: 0; width: 100%; z-index: 2; pointer-events: none; }
+  .landscape svg { display: block; width: 100%; height: auto; }
+
+  footer {
+    position: fixed; left: 0; right: 0; bottom: 14px; z-index: 5; text-align: center;
+    color: var(--g-silver); font-size: .85rem; letter-spacing: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+    .title { clip-path: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Shared razor graphics -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#8e9aaf"/><stop offset=".3" stop-color="#f5f7fa"/>
+        <stop offset=".55" stop-color="#b8c2d3"/><stop offset=".8" stop-color="#ffffff"/>
+        <stop offset="1" stop-color="#8e9aaf"/>
+      </linearGradient>
+      <linearGradient id="handle" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#0a2a6b"/><stop offset=".5" stop-color="#2f6fe0"/><stop offset="1" stop-color="#0a2a6b"/>
+      </linearGradient>
+      <symbol id="de-blade" viewBox="0 0 100 44">
+        <path fill="url(#steel)" fill-rule="evenodd" stroke="#6b7a90" stroke-width="1"
+          d="M8 4 H44 L50 10 L56 4 H92 Q96 4 96 8 V36 Q96 40 92 40 H56 L50 34 L44 40 H8 Q4 40 4 36 V8 Q4 4 8 4 Z
+             M20 19 H40 L44 15 H56 L60 19 H80 V25 H60 L56 29 H44 L40 25 H20 Z"/>
+        <path d="M8 6 H44 M56 6 H92 M8 38 H44 M56 38 H92" stroke="#ffffff" stroke-width="1" opacity=".9"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="stars" id="stars"></div>
+  <div id="blades"></div>
+  <canvas id="fx"></canvas>
+  <div class="razor-cursor" id="razor" aria-hidden="true">
+    <svg width="36" height="72" viewBox="0 0 60 120">
+      <rect x="4" y="2" width="52" height="24" rx="5" fill="url(#steel)" stroke="#5c6b82" stroke-width="1.5"/>
+      <rect x="4" y="2" width="52" height="4" rx="2" fill="#2f6fe0"/>
+      <g stroke="#ffffff" stroke-width="1.4">
+        <line x1="8" y1="10" x2="52" y2="10"/><line x1="8" y1="14" x2="52" y2="14"/>
+        <line x1="8" y1="18" x2="52" y2="18"/><line x1="8" y1="22" x2="52" y2="22"/>
+      </g>
+      <path d="M24 26 L36 26 L34 36 L26 36 Z" fill="#8e9aaf"/>
+      <rect x="22" y="34" width="16" height="82" rx="8" fill="url(#handle)"/>
+      <g stroke="#9fd4ff" stroke-width="2" opacity=".7">
+        <line x1="26" y1="56" x2="34" y2="56"/><line x1="26" y1="62" x2="34" y2="62"/>
+        <line x1="26" y1="68" x2="34" y2="68"/><line x1="26" y1="74" x2="34" y2="74"/>
+      </g>
+    </svg>
+  </div>
+
+  <header>
+    <div class="brand">BEN CAT DIGITAL ACADEMY</div>
+    <div class="flag" title="Vietnam">
+      <svg width="22" height="22" viewBox="-1 -1 2 2" aria-hidden="true">
+        <polygon fill="#ffcd00" points="0,-1 0.2245,-0.309 0.951,-0.309 0.363,0.118 0.588,0.809 0,0.382 -0.588,0.809 -0.363,0.118 -0.951,-0.309 -0.2245,-0.309"/>
+      </svg>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="welcome">Xin chào &middot; Welcome to</div>
+      <div class="title-wrap">
+        <h1 class="title">Ben Cat <span class="accent">Digital</span> Academy</h1>
+        <div class="blade" aria-hidden="true"></div>
+      </div>
+      <div class="bootcamp">BOOTCAMP</div>
+      <p class="tagline"><span id="typed"></span><span class="cursor">&nbsp;</span></p>
+      <p class="partner">Powered by <strong>Gillette</strong> &middot; Ben Cat, Bình Dương, Việt Nam</p>
+      <p class="hint">Move &amp; click anywhere to slice</p>
+    </section>
+  </main>
+
+  <footer>&copy; <span id="year"></span> Ben Cat Digital Academy &middot; Cùng nhau phát triển &mdash; Growing Together</footer>
+
+  <!-- Ha Long Bay karsts and water (static) -->
+  <div class="landscape" aria-hidden="true">
+    <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="karst" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1f6b5a"/><stop offset="1" stop-color="#0b2e3a"/>
+        </linearGradient>
+        <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1a4fb5" stop-opacity=".85"/><stop offset="1" stop-color="#050f2a"/>
+        </linearGradient>
+      </defs>
+      <path fill="url(#karst)" opacity=".75" d="M0 150 L60 70 Q80 40 100 75 L140 150 L190 90 Q210 50 235 95 L270 150 L380 150 L430 60 Q455 20 480 65 L520 150 L900 150 L950 80 Q975 45 1000 85 L1040 150 L1150 150 L1200 55 Q1225 15 1250 60 L1300 150 L1360 100 Q1390 70 1410 105 L1440 150 Z"/>
+      <path fill="url(#sea)" d="M0 150 Q60 140 120 150 T240 150 T360 150 T480 150 T600 150 T720 150 T840 150 T960 150 T1080 150 T1200 150 T1320 150 T1440 150 L1440 200 L0 200 Z"/>
+    </svg>
+  </div>
+
+<script>
+  // Twinkling stars
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 70 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    stars.appendChild(s);
+  }
+
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Floating, spinning double-edge blades
+  const bladeLayer = document.getElementById('blades');
+  if (!reduceMotion) {
+    for (let i = 0; i < 14; i++) {
+      const b = document.createElement('div');
+      b.className = 'fblade';
+      b.style.left = Math.random() * 95 + 'vw';
+      b.style.width = (30 + Math.random() * 50) + 'px';
+      b.style.animationDuration = (12 + Math.random() * 14) + 's';
+      b.style.animationDelay = (-Math.random() * 26) + 's';
+      b.innerHTML = '<svg viewBox="0 0 100 44"><use href="#de-blade"/></svg>';
+      b.firstChild.style.animationDuration = (4 + Math.random() * 6) + 's';
+      bladeLayer.appendChild(b);
+    }
+  }
+
+  // Typewriter tagline
+  const phrases = [
+    'Sharpen your skills. Shape the future.',
+    'Digital excellence, made in Vietnam.',
+    'The best a learner can get.',
+    'Học hỏi - Sáng tạo - Phát triển.'
+  ];
+  const typed = document.getElementById('typed');
+  let p = 0, c = 0, deleting = false;
+  function type() {
+    const text = phrases[p];
+    typed.textContent = text.slice(0, c);
+    if (!deleting && c < text.length) { c++; setTimeout(type, 60); }
+    else if (!deleting) { deleting = true; setTimeout(type, 1800); }
+    else if (c > 0) { c--; setTimeout(type, 30); }
+    else { deleting = false; p = (p + 1) % phrases.length; setTimeout(type, 400); }
+  }
+  setTimeout(type, 3000);
+
+  // Razor cursor, blade trail, and click-to-slice effects
+  const canvas = document.getElementById('fx');
+  const ctx = canvas.getContext('2d');
+  const razor = document.getElementById('razor');
+  let trail = [], chips = [], slashes = [];
+  let mx = innerWidth / 2, my = innerHeight / 2, lastX = mx;
+  let tilt = -20, curTilt = -20, bx = 0, by = 0;
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = innerWidth * dpr;
+    canvas.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  addEventListener('pointermove', e => {
+    mx = e.clientX; my = e.clientY;
+    trail.push({ x: mx, y: my, t: performance.now() });
+    tilt = Math.max(-55, Math.min(15, -20 + (mx - lastX) * 1.5));
+    lastX = mx;
+    razor.style.opacity = e.pointerType === 'mouse' ? 1 : 0;
+  });
+  document.addEventListener('mouseleave', () => { razor.style.opacity = 0; });
+
+  addEventListener('pointerdown', e => {
+    const x = e.clientX, y = e.clientY;
+    slashes.push({ x, y, a: -Math.PI / 4 + (Math.random() - .5) * .8, t: performance.now() });
+    for (let i = 0; i < 12; i++) {
+      const ang = Math.random() * Math.PI * 2, sp = 2 + Math.random() * 5;
+      chips.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 2,
+                   r: Math.random() * 6, vr: (Math.random() - .5) * .4, life: 1 });
+    }
+    razor.classList.remove('cut');
+    void razor.offsetWidth;
+    razor.classList.add('cut');
+  });
+
+  function frame(now) {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.lineCap = 'round';
+    ctx.shadowColor = '#9fd4ff';
+    ctx.shadowBlur = 12;
+
+    // Steel trail behind the razor
+    trail = trail.filter(pt => now - pt.t < 300);
+    for (let i = 1; i < trail.length; i++) {
+      const a = 1 - (now - trail[i].t) / 300;
+      ctx.strokeStyle = `rgba(210, 235, 255, ${a})`;
+      ctx.lineWidth = a * 4;
+      ctx.beginPath();
+      ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
+      ctx.lineTo(trail[i].x, trail[i].y);
+      ctx.stroke();
+    }
+
+    // Slash flashes
+    slashes = slashes.filter(s => now - s.t < 500);
+    slashes.forEach(s => {
+      const k = (now - s.t) / 500, len = Math.min(1, k * 4) * 260;
+      const dx = Math.cos(s.a) * len, dy = Math.sin(s.a) * len;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${1 - k})`;
+      ctx.lineWidth = 4 * (1 - k) + 1;
+      ctx.beginPath();
+      ctx.moveTo(s.x - dx, s.y - dy);
+      ctx.lineTo(s.x + dx, s.y + dy);
+      ctx.stroke();
+    });
+    ctx.shadowBlur = 0;
+
+    // Mini blades scattering from the cut
+    chips = chips.filter(ch => ch.life > 0);
+    chips.forEach(ch => {
+      ch.x += ch.vx; ch.y += ch.vy; ch.vy += .15; ch.r += ch.vr; ch.life -= .015;
+      ctx.save();
+      ctx.globalAlpha = Math.max(ch.life, 0);
+      ctx.translate(ch.x, ch.y);
+      ctx.rotate(ch.r);
+      ctx.fillStyle = '#e6ebf2';
+      ctx.fillRect(-9, -4, 18, 8);
+      ctx.fillStyle = '#0a2a6b';
+      ctx.fillRect(-5, -1, 10, 2);
+      ctx.restore();
+    });
+
+    // Smooth razor tilt and blade-field parallax
+    tilt += (-20 - tilt) * .05;
+    curTilt += (tilt - curTilt) * .15;
+    razor.style.transform = `translate(${mx - 18}px, ${my - 5}px) rotate(${curTilt}deg)`;
+    bx += ((mx / innerWidth - .5) * -40 - bx) * .05;
+    by += ((my / innerHeight - .5) * -40 - by) * .05;
+    bladeLayer.style.transform = `translate(${bx}px, ${by}px)`;
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
